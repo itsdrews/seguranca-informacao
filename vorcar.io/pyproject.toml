@@ -7,4 +7,9 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.142.2",
     "pycryptodome>=3.24.0",
+    "pydantic>=2.13.5",
+    "redis>=8.1.0",
+    "requests>=2.34.2",
+    "sqlalchemy>=2.1.4",
+    "uvicorn>=0.54.0",
 ]
