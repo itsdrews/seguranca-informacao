@@ -4,6 +4,8 @@ from routers.keys_router import router as keys_router
 from routers.messages_router import router as messages_router
 from contextlib import asynccontextmanager
 from redis_client import check_redis_connection
+from routers.websockets_router import router as websockets_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -26,12 +28,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Chaves Persistentes & Fila de Mensagens Redis", lifespan=lifespan
+    title="Chaves Persistentes & Fila de Mensagens Redis - Chat E2E", lifespan=lifespan
 )
 
 app.include_router(keys_router)
 app.include_router(messages_router)
-
+app.include_router(websockets_router)
 
 @app.get("/")
 def root():

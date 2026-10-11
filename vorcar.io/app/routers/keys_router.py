@@ -7,7 +7,7 @@ Ela possui como comportamentos:
 """
 
 from __future__ import annotations
-
+import asyncio
 import base64
 from database import get_db
 from fastapi import APIRouter, HTTPException, Depends
@@ -15,12 +15,13 @@ from pydantic import BaseModel
 from models.user_public_key_model import UserPublicKeyModel
 from schemas import PublicKeyPayload
 from sqlalchemy.orm import Session
+from routers.websockets_router import manager
 
 router = APIRouter(prefix="/keys", tags=["keys"])
 
 
 @router.post("/{user_id}", status_code=201)
-def deposit_public_key(
+async def deposit_public_key(
     user_id: str, payload: PublicKeyPayload, db: Session = Depends(get_db)
 ):
   try:
@@ -51,6 +52,13 @@ def deposit_public_key(
     db.add(record)
 
   db.commit()
+
+  # NOTIFICA OS CLIENTES QUE UMA NOVA CHAVE FOI DEPOSITADA
+  await manager.broadcast_event({
+      "type": "KEY_DEPOSITED",
+      "user_id": user_id,
+      "public_key": payload.public_key,
+  })
   return {"status": "deposited", "user_id": user_id}
 
 
