@@ -19,6 +19,11 @@ from routers.websockets_router import manager
 
 router = APIRouter(prefix="/keys", tags=["keys"])
 
+@router.get("/", status_code=200)
+def list_public_keys(db: Session = Depends(get_db)):
+  """Retorna a lista de IDs de todos os usuários que possuem chave depositada."""
+  records = db.query(UserPublicKeyModel).all()
+  return {"users": [r.user_id for r in records]}
 
 @router.post("/{user_id}", status_code=201)
 async def deposit_public_key(
