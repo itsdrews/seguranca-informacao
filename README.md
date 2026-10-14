@@ -27,11 +27,13 @@ uv run uvicorn main:app
 ```
 ### 6. Subir client (Alice -> Bob)
 ```bash
-uv run cli_chat.py alice bob
-```
-### 7. Subir client (Bob -> Alice)
+uv run cli_chat.py alice
 
-```bash
-uv run cli_chat.py bob alice
 ```
-#### Observe a interação do chat via websocket, a troca de chaves e distribuição pelo terminal do servidor.
+Alice deposita chave e uma lista de comandos aparece disponível.
+```bash
+/keys  # Retorna lista de 'usuários' chaves públicas disponíveis no servidor
+/chat <destinatario1> <destinatario2> # Permite uma troca de mensagens 1:N 
+
+```
+### Próximo passo: implementar room para que as mensagens não sejam disparadas uma a uma para cada interlocutor
