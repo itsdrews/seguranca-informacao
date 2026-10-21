@@ -1,7 +1,7 @@
 # Guia de Implementação — Demonstrações de Ataque
 
 > Documento de apoio ao relatório da disciplina de Segurança da Informação.
-> Descreve **como construir** três demonstrações de ataque contra o próprio
+> Descreve **como construir** a demonstração de ataque contra o próprio
 > sistema de chat (Blowfish + ECDH + HMAC). Os scripts não estão prontos aqui —
 > este guia dá o conceito, os pontos exatos do código onde cada ataque se
 > encaixa, o esqueleto da lógica e o que capturar para o relatório.
