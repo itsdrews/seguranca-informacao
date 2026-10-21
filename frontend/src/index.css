@@ -1,0 +1,29 @@
+
+:root {
+  font-family: Inter, system-ui, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  background: #060911;
+}
+
+button,
+input {
+  font: inherit;
+}
