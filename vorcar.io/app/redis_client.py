@@ -37,3 +37,8 @@ def pop_offline_messages(recipient_id: str) -> list[dict]:
 
   # Converte cada string JSON da lista em dicionário
   return [json.loads(msg) for msg in raw_messages]
+
+def clear_offline_messages(user_id: str) -> None:
+    """Remove as mensagens pendentes destinadas ao usuário."""
+    queue_key = f"messages:{user_id}"
+    redis_client.delete(queue_key)

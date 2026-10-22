@@ -1,4 +1,3 @@
-
 const API_URL = "http://127.0.0.1:8000";
 
 // Tipos das respostas da API
@@ -72,4 +71,22 @@ export async function getPublicKey(
   const data: PublicKeyResponse = await response.json();
 
   return data.public_key;
+}
+
+// Solicita o logout e a limpeza do histórico temporário
+export async function logoutUser(
+  userId: string
+): Promise<void> {
+  const response = await fetch(
+    `${API_URL}/messages/logout/${encodeURIComponent(userId)}`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Erro ao encerrar sessão: ${response.status}`
+    );
+  }
 }
