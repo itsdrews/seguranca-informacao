@@ -51,10 +51,13 @@ export async function registerPublicKey(
 
 // Consulta a chave pública de um usuário
 export async function getPublicKey(
-  userId: string
+  userId: string,
+  requester?: string
 ): Promise<string | null> {
+  // X-Requester: permite ao servidor registrar QUEM solicitou a chave
   const response = await fetch(
-    `${API_URL}/keys/${encodeURIComponent(userId)}`
+    `${API_URL}/keys/${encodeURIComponent(userId)}`,
+    requester ? { headers: { "X-Requester": requester } } : undefined
   );
 
   // Usuário ainda não possui uma chave cadastrada

@@ -107,6 +107,8 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
                 continue
 
             content_length = len(encrypted_content)
+            group_id = payload.get("group_id")
+            group_members = payload.get("group_members") or []
 
             # Trunca o texto cifrado para manter o log legível
             preview = (
@@ -133,6 +135,9 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
 
             if delivered:
                 print(f"⚡ [{now}] [MENSAGEM ENVIADA - REAL-TIME WS]")
+                if group_id:
+                    print(f" ├─ Grupo      : {group_id} ({', '.join(group_members)})")
+                    print(f" ├─ Chave usada: sessão par-a-par {user_id}<->{recipient_id} (cópia individual)")
                 print(f" ├─ Remetente  : '{user_id}'")
                 print(f" ├─ Destino    : '{recipient_id}'")
                 print(
@@ -146,6 +151,8 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
                 push_offline_message(recipient_id, msg_data)
 
                 print(f"📦 [{now}] [MENSAGEM ENFILEIRADA - REDIS]")
+                if group_id:
+                    print(f" ├─ Grupo      : {group_id} ({', '.join(group_members)})")
                 print(f" ├─ Remetente  : '{user_id}'")
                 print(f" ├─ Destino    : '{recipient_id}' (OFF-LINE)")
                 print(

@@ -2,6 +2,7 @@ import { exportPublicKey } from "./ecdh";
 import { getPublicKey } from "../services/api";
 import { generateKeyPair, type ECDHKeyPair } from "./ecdh";
 import { registerPublicKey } from "../services/api";
+import { fingerprint, keyLog } from "./keyLog";
 
 const DB_NAME = "chat-seguro-keys";
 const STORE_NAME = "identities";
@@ -42,10 +43,21 @@ export async function getOrCreateIdentity(
     );
 
     if (saved) {
+      keyLog(userId, "[1. CHAVE CARREGADA] Par ECDH P-256 (identidade existente)", [
+        "Origem             : IndexedDB do navegador",
+        "Chave privada      : não exportável, permanece SOMENTE neste navegador",
+        `Chave pública (fp) : ${await fingerprint(await exportPublicKey(saved.publicKey))}`,
+      ]);
       return saved;
     }
 
     const identity = await generateKeyPair();
+
+    keyLog(userId, "[1. CHAVE CRIADA] Par ECDH P-256 (identidade)", [
+      "Origem             : CRIADA agora e salva no IndexedDB",
+      "Chave privada      : não exportável, permanece SOMENTE neste navegador",
+      `Chave pública (fp) : ${await fingerprint(await exportPublicKey(identity.publicKey))}`,
+    ]);
 
     await new Promise<void>((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, "readwrite");
@@ -150,4 +162,9 @@ export async function registerNewIdentity(
 
   // Registra a chave pública no FastAPI
   await registerPublicKey(userId, publicKeyBase64);
+
+  keyLog(userId, "[2. CHAVE PÚBLICA DEPOSITADA] no servidor", [
+    `POST /keys/${userId} -> OK`,
+    `Fingerprint enviada : ${await fingerprint(publicKeyBuffer)}`,
+  ]);
 }
